@@ -51,13 +51,27 @@ public class MainActivity extends AppCompatActivity {
 
     public void clk(View view){
         EditText promptText = (EditText) findViewById(R.id.promptText);
-        TextView retrieve = (TextView) findViewById(R.id.retrieve);
         String inputText = promptText.getText().toString();
-        retrieve.setText(inputText);
         a.store(new BigInteger(inputText)).flowable().subscribeOn(Schedulers.io()).subscribe(new Consumer<TransactionReceipt>() {
             @Override
             public void accept(TransactionReceipt transactionReceipt) throws Exception {
                 Log.i("vac", "accept: ");
+            }
+        });
+    }
+
+    public void clk2(View view){
+        TextView retrieve = (TextView) findViewById(R.id.retrieve);
+        a.retrieve().flowable().subscribeOn(Schedulers.io()).subscribe(new Consumer<BigInteger>() {
+            @Override
+            public void accept(BigInteger bigInteger) throws Exception {
+                Log.i("vac", "accept: " + bigInteger);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        retrieve.setText(String.valueOf(bigInteger));
+                    }
+                });
             }
         });
     }
